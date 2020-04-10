@@ -79,15 +79,13 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   Widget _label$(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (BuildContext context, Widget child) {
-        return StrokeText(
-          _label,
-          fontSize: 28 + _animationController.value * 48,
-          color: Colors.white.withOpacity(_animationController.value),
-        );
-      },
+    return ScaleTransition(
+      scale: _animationController,
+      child: StrokeText(
+        _label,
+        fontSize: 80,
+        color: Colors.white,
+      ),
     );
   }
 }

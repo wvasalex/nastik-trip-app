@@ -52,6 +52,7 @@ class _ArticleEditorState extends State<ArticleEditor> {
       body: SingleChildScrollView(
         child: _body$(context),
       ),
+      margin: EdgeInsets.symmetric(horizontal: 16),
     );
   }
 
@@ -65,17 +66,9 @@ class _ArticleEditorState extends State<ArticleEditor> {
           },
           value: _title,
         ),
-        /*SizedBox(height: 8),
-        TextInput(
-          label: 'Краткое содержание',
-          onChange: (String value) {
-            _description = value;
-          },
-          value: _description,
-          minLines: 5,
-          maxLines: 8,
-        ),*/
         SizedBox(height: 8),
+        _images$(context),
+        SizedBox(height: 24),
         Stack(
           children: <Widget>[
             TextInput(
@@ -102,8 +95,6 @@ class _ArticleEditorState extends State<ArticleEditor> {
             ),
           ],
         ),
-        SizedBox(height: 24),
-        _images$(context),
         SizedBox(height: 24),
         Hero(
           tag: 'submit',

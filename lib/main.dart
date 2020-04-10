@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     final Color textColor = Color(0xFF323132);
 
     return MaterialApp(
-      title: 'Innovative Club',
+      title: 'Трипы',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
