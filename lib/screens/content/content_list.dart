@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:journey/shared/shared.dart';
-import 'article.service.dart';
-import 'article-editor.dart';
+import '../content/content_editor.dart';
 
-class ArticleList extends StatefulWidget {
+class ContentList extends StatefulWidget {
   static const String routeName = 'article-list';
 
   @override
-  _ArticleListState createState() => _ArticleListState();
+  _ContentListState createState() => _ContentListState();
 }
 
-class _ArticleListState extends State<ArticleList> {
-  final ArticleService _articleService = ArticleService();
+class _ContentListState extends State<ContentList> {
+  final ContentService _contentService = ContentService();
 
   List _articles;
 
@@ -65,7 +64,7 @@ class _ArticleListState extends State<ArticleList> {
 
   Widget _item$({
     BuildContext context,
-    Article article,
+    Content article,
   }) {
     final ThemeData theme = Theme.of(context);
 
@@ -74,7 +73,6 @@ class _ArticleListState extends State<ArticleList> {
         _openEditor(article);
       },
       title: article.title,
-      subtitle: article.content.split('\n').elementAt(0),
     );
   }
 
@@ -94,7 +92,7 @@ class _ArticleListState extends State<ArticleList> {
 
     return FloatingActionButton(
       onPressed: _openEditor,
-      heroTag: 'submit',
+      heroTag: 'fab',
       backgroundColor: theme.primaryColor,
       child: Icon(
         Icons.add,
@@ -106,28 +104,25 @@ class _ArticleListState extends State<ArticleList> {
   Future _load() async {
     List articles;
     try {
-      articles = await _articleService.get();
+      articles = await _contentService.getArticles();
     } catch (e) {
       articles = [];
     }
 
     setState(() {
       _articles = articles;
-      print(articles);
     });
   }
 
-  Future _openEditor([Article article]) async {
-    final Article updated = await Navigate.push(
+  Future _openEditor([Content content]) async {
+    final Content updated = await Navigate.push(
       context: context,
-      widget: ArticleEditor(
-        article: article,
-        newId: (_articles ?? []).length + 1,
+      widget: ContentEditor(
+        content: content,
       ),
     );
 
     if (updated != null) {
-      await _articleService.save(updated);
       _load();
     }
   }

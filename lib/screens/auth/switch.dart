@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:journey/shared/shared.dart';
 import '../splash/splash.dart';
-import '../article/article-list.dart';
+import '../content/content_list.dart';
 
 class SwitchScreen extends StatefulWidget {
   static const routeName = 'home';
@@ -32,7 +32,7 @@ class _SwitchScreenState extends State<SwitchScreen> {
   void _init(BuildContext context) {
     Navigate.setRoot(
       context: context,
-      widget: ArticleList(),
+      widget: ContentList(),
     );
   }
 }

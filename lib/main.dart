@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
       initialRoute: SwitchScreen.routeName,
       routes: {
         SwitchScreen.routeName: (_) => SwitchScreen(),
-        ArticleList.routeName: (_) => ArticleList(),
+        ContentList.routeName: (_) => ContentList(),
       },
     );
   }

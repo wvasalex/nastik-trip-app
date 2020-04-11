@@ -7,10 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageChooser extends StatefulWidget {
-  final CameraCaptureModel model;
+  final CameraCaptureController controller;
   final String path;
-  final List<String> images;
-  final Function(String) onCaptured;
   final Function onComplete;
   final Function(BuildContext, String) onTap;
   final Function cameraLabel;
@@ -23,16 +21,14 @@ class ImageChooser extends StatefulWidget {
   final double imageCompression;
 
   ImageChooser({
-    @required this.model,
+    @required this.controller,
     @required this.path,
-    @required this.onCaptured,
     @required this.onTap,
     this.buildHandle,
     this.buildPreview,
     this.buildLabel,
     this.onComplete,
     this.cameraLabel,
-    this.images = const [],
     this.label = '',
     this.maxCount,
     this.imageLargerSide,
@@ -47,19 +43,33 @@ class _ImageChooserState extends State<ImageChooser> {
   static const NATIVE_CAMERA = 'settings.photo.nativecamera';
 
   @override
+  void initState() {
+    widget.controller.addListener(_onChange);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChange);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: widget.model,
-      child: Consumer<CameraCaptureModel>(
+    return _build$(context);
+
+    /*return ChangeNotifierProvider<CameraCaptureController>.value(
+      value: widget.controller,
+      child: Consumer<CameraCaptureController>(
         builder: (context, model, child) => _build$(context),
       ),
-    );
+    );*/
   }
 
   Widget _build$(BuildContext context) {
     List<Widget> items = [_handle$(context)]..addAll(_images$(context));
     return SizedBox(
-      height: 78,
+      height: 96,
       child: ListView.builder(
         itemCount: items.length,
         scrollDirection: Axis.horizontal,
@@ -80,24 +90,23 @@ class _ImageChooserState extends State<ImageChooser> {
       child: widget.buildHandle != null
           ? widget.buildHandle(context)
           : Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: theme.errorColor,
-                  width: 2,
-                ),
-              ),
-              width: 78,
-              child: AssetIcon(
-                name: 'photo',
-                width: 24,
-                height: 20,
-              ),
-            ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: theme.primaryColor,
+            width: 2,
+          ),
+        ),
+        padding: EdgeInsets.all(36),
+        child: Icon(
+          Icons.camera_alt,
+          size: 24,
+        ),
+      ),
     );
   }
 
   List<Widget> _images$(BuildContext context) {
-    final List<String> images = widget.model.value;
+    final List<String> images = widget.controller.value;
     images.sort();
 
     return images.map((String filename) {
@@ -116,8 +125,8 @@ class _ImageChooserState extends State<ImageChooser> {
         }
       },
       child: Container(
-        width: 78,
-        height: 78,
+        width: 96,
+        height: 96,
         margin: EdgeInsets.only(left: 16),
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -141,9 +150,8 @@ class _ImageChooserState extends State<ImageChooser> {
       Navigate.push(
         context: context,
         widget: CameraCapture(
-          model: widget.model,
+          controller: widget.controller,
           onComplete: widget.onComplete,
-          onCaptured: widget.onCaptured,
           onPreviewTap: (BuildContext chooserContext, String filename) {
             widget.onTap(chooserContext, filename);
           },
@@ -176,8 +184,14 @@ class _ImageChooserState extends State<ImageChooser> {
       quality: quality,
     );
 
-    widget.model.add(filePath);
-    widget.onCaptured(filePath);
+    widget.controller.add(filePath);
     widget.onComplete();
+  }
+
+  void _onChange() {
+    if (mounted) {
+      setState(() {
+      });
+    }
   }
 }

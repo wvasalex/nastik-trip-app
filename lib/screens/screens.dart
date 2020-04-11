@@ -1,2 +1,2 @@
 export 'auth/switch.dart';
-export 'article/article-list.dart';
+export 'content/content_list.dart';

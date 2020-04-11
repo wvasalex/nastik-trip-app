@@ -32,8 +32,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _animationController.addListener(() {
       if (_animationController.isCompleted) {
         if (_index < _texts.length - 1) {
-          _index++;
-          _label = _texts[_index];
+          _label = _texts[++_index];
           _animationController.forward(from: 0);
 
           setState(() {});

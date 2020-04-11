@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:random_string/random_string.dart' as random;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -9,7 +9,6 @@ import 'package:vibration/vibration.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-import 'round_button.dart';
 import '../shared.dart';
 
 class CameraCaptureModel extends SharedList<String> {
@@ -17,13 +16,50 @@ class CameraCaptureModel extends SharedList<String> {
       : super(initialValue: initialValue);
 }
 
+class CameraCaptureController extends ChangeNotifier {
+  final List<String> value;
+  final int min;
+  final int max;
+
+  CameraCaptureController({
+    @required this.value,
+    this.min = 1,
+    this.max = 100,
+  }) : assert(min <= max);
+
+  @override
+  dispose() {
+    value.clear();
+    super.dispose();
+  }
+
+  bool invalid() {
+    return value.length < min || value.length > max;
+  }
+
+  int add(String filename) {
+    if (value.length < max) {
+      value.add(filename);
+      notifyListeners();
+    }
+    return value.length;
+  }
+
+  int remove(String filename) {
+    if (value.contains(filename)) {
+      value.remove(filename);
+      notifyListeners();
+    }
+    return value.length;
+  }
+}
+
 class CameraCapture extends StatefulWidget {
   static final cameras = availableCameras();
 
-  final SharedList<String> model;
+  final CameraCaptureController controller;
 
   final Function() onComplete;
-  final Function(String) onCaptured;
 
   final Function(BuildContext, String) onPreviewTap;
   final bool gallery;
@@ -35,8 +71,7 @@ class CameraCapture extends StatefulWidget {
   final double imageCompression;
 
   CameraCapture({
-    @required this.model,
-    @required this.onCaptured,
+    @required this.controller,
     this.onComplete,
     this.onPreviewTap,
     this.path = '',
@@ -49,8 +84,7 @@ class CameraCapture extends StatefulWidget {
   });
 
   CameraCapture.modal({
-    @required this.model,
-    @required this.onCaptured,
+    @required this.controller,
     @required BuildContext context,
     this.onComplete,
     this.onPreviewTap,
@@ -67,12 +101,11 @@ class CameraCapture extends StatefulWidget {
       Navigator.of(context).push(
         SlideUpRoute(
           widget: CameraCapture(
-            onCaptured: onCaptured,
             onComplete: onComplete,
             gallery: gallery,
             label: label,
             path: path,
-            model: model,
+            controller: controller,
           ),
         ),
       );
@@ -88,7 +121,7 @@ class _CameraCaptureState extends State<CameraCapture> {
 
   CameraDescription _backCamera;
   CameraDescription _frontCamera;
-  CameraController _controller;
+  CameraController _cameraController;
 
   //FlashMode _flashMode = FlashMode.off;
   bool _ready = false;
@@ -116,7 +149,7 @@ class _CameraCaptureState extends State<CameraCapture> {
       widget.onComplete();
     }
 
-    _controller.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
@@ -153,7 +186,7 @@ class _CameraCaptureState extends State<CameraCapture> {
   }
 
   void _switchCamera() {
-    CameraDescription cur = _controller.description;
+    CameraDescription cur = _cameraController.description;
     CameraDescription switched =
     cur == _backCamera ? _frontCamera : _backCamera;
 
@@ -166,7 +199,7 @@ class _CameraCaptureState extends State<CameraCapture> {
   }
 
   void _initController(CameraDescription cameraDescription) async {
-    _controller = CameraController(
+    _cameraController = CameraController(
       cameraDescription,
       _getPreset(),
       /*flashMode: _flashMode,
@@ -175,7 +208,7 @@ class _CameraCaptureState extends State<CameraCapture> {
     );
 
     try {
-      await _controller.initialize();
+      await _cameraController.initialize();
     } catch (_) {
       Navigator.of(context).pop();
     }
@@ -231,8 +264,8 @@ class _CameraCaptureState extends State<CameraCapture> {
                 quarterTurns: orientation == Orientation.landscape ? 3 : 0,
                 child: Center(
                   child: AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: CameraPreview(_controller),
+                    aspectRatio: _cameraController.value.aspectRatio,
+                    child: CameraPreview(_cameraController),
                   ),
                 ),
               ),
@@ -241,69 +274,71 @@ class _CameraCaptureState extends State<CameraCapture> {
                 left: 16,
                 right: 16,
                 child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                     SizedBox(width: 40),
-                ChangeNotifierProvider<CameraCaptureModel>.value(
-                value: widget.model,
-                child: _label$(context),
+                    _label$(context),
+                    _flash$(context),
+                  ],
+                ),
               ),
-              _flash$(context),
+              Positioned(
+                bottom: 112,
+                left: 16,
+                right: 16,
+                child: _description$(context),
+                /*child: ChangeNotifierProvider<CameraCaptureModel>.value(
+                  value: widget.model,
+                  child: _description$(context),
+                ),*/
+              ),
+              Positioned.directional(
+                start: 0,
+                end: 0,
+                bottom: 32,
+                height: 124,
+                textDirection: TextDirection.ltr,
+                child: _bottomBar$(context),
+              ),
+              overlay$,
             ],
           ),
-        ),
-        Positioned(
-        bottom: 112,
-        left: 16,
-        right: 16,
-        child: ChangeNotifierProvider<CameraCaptureModel>.value(
-        value: widget.model,
-        child: _description$(context),
-        ),
-        ),
-        Positioned.directional(
-        start: 0,
-        end: 0,
-        bottom: 32,
-        height: 70,
-        textDirection: TextDirection.ltr,
-        child: _bottomBar$(context),
-        ),
-        overlay$,
-        ],
-        ),
         );
       },
     );
   }
 
   Widget _bottomBar$(BuildContext context) {
-    return ChangeNotifierProvider<CameraCaptureModel>.value(
-    value: widget.model,
-    child: Center(
-    child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-    SizedBox(
-    width: 80,
-    child: _lastImage$(context),
-    ),
-    _capture$(context),
-    SizedBox(
-    width: 80,
-    child: _cancel$(context),
-    ),
-    ],
-    ),
-    ),
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Positioned(
+          bottom: 0,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(
+                width: 80,
+                child: _lastImage$(context),
+              ),
+              _capture$(context),
+              SizedBox(
+                width: 80,
+                child: _cancel$(context),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget _description$(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Consumer<CameraCaptureModel>(
+    return Container();
+    /*return Consumer<CameraCaptureModel>(
       builder: (context, CameraCaptureModel model, child) {
         final bool disabled = _isDisabled();
         final String description = disabled
@@ -328,7 +363,7 @@ class _CameraCaptureState extends State<CameraCapture> {
           ),
         );
       },
-    );
+    );*/
   }
 
   /*Widget _gallery$(BuildContext context) {
@@ -387,20 +422,41 @@ class _CameraCaptureState extends State<CameraCapture> {
       );
     };
 
-    return Consumer<CameraCaptureModel>(
-      builder: (context, CameraCaptureModel model, child) {
-        if (model.length == 0) {
-          return SizedBox(width: 64);
-        }
-        return feed$(model.value.last);
-      },
-    );
+    final List<String> value = widget.controller.value;
+    if (value.length == 0) {
+      return SizedBox(width: 64);
+    }
+    return feed$(value.last);
   }
 
   Widget _capture$(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool disabled = false; //_isDisabled();
+    final double size = _capturingPicture ? 76 : 66;
 
-    return Consumer<CameraCaptureModel>(
+    return Material(
+      color: Colors.transparent,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        margin: EdgeInsets.symmetric(horizontal: 24),
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            width: 4,
+            color: disabled ? theme.errorColor : Colors.white,
+          ),
+        ),
+        child: InkWell(
+          onTap: disabled ? null : _takePicture,
+          customBorder: CircleBorder(),
+        ),
+      ),
+    );
+
+    /*return Consumer<CameraCaptureModel>(
       builder: (context, CameraCaptureModel model, child) {
         final bool disabled = _isDisabled();
         final double size = _capturingPicture ? 76 : 66;
@@ -426,7 +482,7 @@ class _CameraCaptureState extends State<CameraCapture> {
           ),
         );
       },
-    );
+    );*/
   }
 
   /*Widget _rotateCamera$(BuildContext context) {
@@ -457,12 +513,12 @@ class _CameraCaptureState extends State<CameraCapture> {
           ? FlashMode.off
           : FlashMode.alwaysFlash;
 
-      _controller.setFlash(mode: _flashMode);
+      _cameraController.setFlash(mode: _flashMode);
       setState(() {});
     };
 
     return FutureBuilder(
-      future: _controller.hasFlash,
+      future: _cameraController.hasFlash,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData && snapshot.data == true) {
           var image = Opacity(
@@ -558,15 +614,15 @@ class _CameraCaptureState extends State<CameraCapture> {
       });
     });
 
-    if (_controller.value.isTakingPicture) {
+    if (_cameraController.value.isTakingPicture) {
       return;
     }
 
-    final String tmpfile = random.randomNumeric(12);
+    final String tmpfile = Uuid().v4();
     final String name = Helpers.localTime().toString();
     final String tmpFilePath = '$_fileDir/$tmpfile.jpg';
     final String filePath = '$_fileDir/$name.jpg';
-    await _controller.takePicture(tmpFilePath);
+    await _cameraController.takePicture(tmpFilePath);
 
     final int quality = ((widget.imageCompression ?? .75) * 100).round();
     await FlutterImageCompress.compressAndGetFile(
@@ -575,8 +631,7 @@ class _CameraCaptureState extends State<CameraCapture> {
       quality: quality,
     );
 
-    widget.model.add(filePath);
-    widget.onCaptured(filePath);
+    widget.controller.add(filePath);
 
     FS().deleteFile(tmpFilePath);
 
@@ -598,6 +653,6 @@ class _CameraCaptureState extends State<CameraCapture> {
   }
 
   bool _isDisabled() {
-    return widget.maxCount != null && widget.model.length >= widget.maxCount;
+    return widget.controller.invalid();
   }
 }
