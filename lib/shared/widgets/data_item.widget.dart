@@ -100,7 +100,6 @@ class DataItem extends StatelessWidget {
 
     return Container(
       decoration: decoration,
-      margin: EdgeInsets.only(bottom: 8),
       child: _link$(
         context,
         Row(

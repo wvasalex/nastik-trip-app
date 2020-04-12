@@ -35,6 +35,10 @@ class _ContentEditorState extends State<ContentEditor> {
         onBack: () {
           Navigator.of(context).pop();
         },
+        actions: <Widget>[
+          _delete$(context),
+          SizedBox(width: 16),
+        ],
       ),
       body: _body$(context),
       floatingActionButton: _fab$(context),
@@ -72,10 +76,40 @@ class _ContentEditorState extends State<ContentEditor> {
     );
   }
 
+  Widget _delete$(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return RoundButton(
+      child: Icon(
+        Icons.delete,
+        color: theme.errorColor,
+      ),
+      onPressed: () {
+        _content.delete();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Widget _header$(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: theme.errorColor.withOpacity(.05),
+            blurRadius: 4.0,
+            spreadRadius: 2.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: TextInput(
+        placeholder: 'Название',
         background: Colors.white,
         value: _content.title ?? '',
         onChange: (String title) {
@@ -97,7 +131,8 @@ class _ContentEditorState extends State<ContentEditor> {
     }).toList();
   }
 
-  Widget _input$(BuildContext context, {
+  Widget _input$(
+    BuildContext context, {
     int index,
     ContentValueItem contentItem,
   }) {

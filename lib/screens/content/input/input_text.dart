@@ -30,7 +30,10 @@ class _InputTextState extends State<InputText> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 16,
+      ),
       child: widget.preview$(
         context: context,
         child: _input$(context),
@@ -40,6 +43,7 @@ class _InputTextState extends State<InputText> {
 
   Widget _input$(BuildContext context) {
     return TextInput(
+      placeholder: '__',
       value: widget.value,
       onChange: widget.onChange,
       background: Colors.white,

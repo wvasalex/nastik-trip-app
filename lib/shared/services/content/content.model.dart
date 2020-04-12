@@ -84,6 +84,19 @@ class Content {
     );
   }
 
+  void read() async {
+    final Map raw = fs.readJSON(await getValuePath());
+
+    if (raw != null) {
+      title = raw['title'];
+      value = List.from(raw['value'].map((answer) => ContentValueItem.fromJSON(answer)));
+    }
+  }
+
+  void delete() {
+    fs.deleteDirectory(getPath());
+  }
+
   String toString() {
     return json.encode({
       'title': title,
@@ -91,13 +104,6 @@ class Content {
         return item.toMap();
       }).toList(),
     });
-  }
-
-  void read() async {
-    final Map raw = fs.readJSON(await getValuePath());
-
-    title = raw['title'];
-    value = List.from(raw['value'].map((answer) => ContentValueItem.fromJSON(answer)));
   }
 }
 

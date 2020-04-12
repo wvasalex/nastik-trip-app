@@ -12,7 +12,7 @@ class ContentList extends StatefulWidget {
 class _ContentListState extends State<ContentList> {
   final ContentService _contentService = ContentService();
 
-  List _articles;
+  List<Content> _contents;
 
   @override
   void initState() {
@@ -25,25 +25,24 @@ class _ContentListState extends State<ContentList> {
   Widget build(BuildContext context) {
     return Page(
       appBar: SAppBar(
-        label: 'Трипы',
+        label: 'Мои идеи и планы',
       ),
       body: _body$(context),
       floatingActionButton: _fab$(context),
-      margin: EdgeInsets.all(0),
     );
   }
 
   Widget _body$(BuildContext context) {
-    if (_articles == null) {
+    if (_contents == null) {
       return Center(
         child: AnimatedSpinner(),
       );
     }
 
-    if (_articles.length == 0) {
+    if (_contents.length == 0) {
       return Empty(
-        title: 'Совсем пусто (',
-        description: 'Начните, опишите свой любимый день!',
+        title: 'Без вариантов (',
+        description: 'Составьте план на выходные!',
         button: Hero(
           tag: 'submit',
           child: _submit$(context),
@@ -52,11 +51,12 @@ class _ContentListState extends State<ContentList> {
     }
 
     return ListView.builder(
-      itemCount: _articles.length,
+      itemCount: _contents.length,
       itemBuilder: (_, int index) {
         return _item$(
           context: context,
-          article: _articles[index],
+          article: _contents[index],
+          index: index + 1,
         );
       },
     );
@@ -65,26 +65,46 @@ class _ContentListState extends State<ContentList> {
   Widget _item$({
     BuildContext context,
     Content article,
+    int index,
   }) {
     final ThemeData theme = Theme.of(context);
+    final String title =
+        article?.title?.length == 0 ? '#$index' : article.title;
 
-    return DataItem(
-      onTap: (BuildContext _) {
-        _openEditor(article);
-      },
-      title: article.title,
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: theme.errorColor.withOpacity(.05),
+            blurRadius: 4.0,
+            spreadRadius: 2.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: DataItem(
+        onTap: (BuildContext _) {
+          _openEditor(article);
+        },
+        title: title,
+        titleStyle: theme.textTheme.subtitle,
+        underline: false,
+      ),
     );
   }
 
   Widget _submit$(BuildContext context) {
     return Button(
       onPressed: _openEditor,
-      text: 'Описать',
+      text: 'Начать',
     );
   }
 
   Widget _fab$(BuildContext context) {
-    if (_articles == null || _articles.length == 0) {
+    if (_contents == null || _contents.length == 0) {
       return null;
     }
 
@@ -110,20 +130,18 @@ class _ContentListState extends State<ContentList> {
     }
 
     setState(() {
-      _articles = articles;
+      _contents = articles;
     });
   }
 
   Future _openEditor([Content content]) async {
-    final Content updated = await Navigate.push(
+    await Navigate.push(
       context: context,
       widget: ContentEditor(
         content: content,
       ),
     );
 
-    if (updated != null) {
-      _load();
-    }
+    _load();
   }
 }

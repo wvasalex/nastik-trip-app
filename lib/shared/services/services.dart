@@ -11,3 +11,4 @@ export 'model/model.dart';
 export 'model/shared_data.dart';
 export 'notification/toaster.dart';
 export 'content/content.service.dart';
+export 'single_image_picker.dart';

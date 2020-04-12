@@ -70,9 +70,10 @@ class _InputSelectorState extends State<InputSelector>
   Widget _fab$(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final List<Widget> items = _actions.keys.map(_action$).toList();
+
     items.add(
       FloatingActionButton(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: theme.errorColor,
         heroTag: 'fab',
         child: AnimatedBuilder(
           animation: _animationController,

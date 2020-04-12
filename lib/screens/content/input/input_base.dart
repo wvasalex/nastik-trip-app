@@ -39,7 +39,7 @@ abstract class InputBase extends StatefulWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: theme.errorColor.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(0, 4),
@@ -47,8 +47,20 @@ abstract class InputBase extends StatefulWidget {
         ],
         borderRadius: BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.all(16),
-      child: Column(
+      padding: EdgeInsets.symmetric(
+        vertical: 4,
+        horizontal: 12,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Expanded(
+            child: child,
+          ),
+          _remove$(context),
+        ],
+      ),
+      /*child: Column(
         children: <Widget>[
           child,
           SizedBox(height: 12),
@@ -67,20 +79,18 @@ abstract class InputBase extends StatefulWidget {
             ],
           ),
         ],
-      ),
+      ),*/
     );
   }
 
   Widget _remove$(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return InkWell(
-      onTap: onCancel,
-      child: Text(
-        'Удалить',
-        style: theme.textTheme.body1.copyWith(
-          color: theme.errorColor,
-        ),
+    return RoundButton(
+      onPressed: onCancel,
+      child: Icon(
+        Icons.close,
+        size: 16,
       ),
     );
   }

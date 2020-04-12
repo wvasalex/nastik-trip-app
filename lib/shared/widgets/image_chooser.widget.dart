@@ -91,15 +91,17 @@ class _ImageChooserState extends State<ImageChooser> {
           ? widget.buildHandle(context)
           : Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: theme.primaryColor,
-            width: 2,
+            color: theme.errorColor,
+            width: 1,
           ),
         ),
         padding: EdgeInsets.all(36),
         child: Icon(
           Icons.camera_alt,
           size: 24,
+          color: theme.errorColor,
         ),
       ),
     );
@@ -140,9 +142,9 @@ class _ImageChooserState extends State<ImageChooser> {
     );
   }
 
-  void _capture(BuildContext context) async {
+  /*void _capture(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool nativeCamera = prefs.getBool(NATIVE_CAMERA) ?? false;
+    final bool nativeCamera = prefs.getBool(NATIVE_CAMERA) ?? true;
 
     if (nativeCamera) {
       _pickNative();
@@ -186,6 +188,31 @@ class _ImageChooserState extends State<ImageChooser> {
 
     widget.controller.add(filePath);
     widget.onComplete();
+  }*/
+
+  void _capture(BuildContext context) async {
+    final String imagePath = await SingleImagePicker.pick(context);
+
+    if (imagePath == null) {
+      return;
+    }
+
+    String path = widget.path;
+    final String fileDir = await FS().createDirectory('$path');
+    final String name = Helpers.localTime().toString();
+    final String filePath = '$fileDir/$name.jpg';
+
+    final int quality = 75;
+    await FlutterImageCompress.compressAndGetFile(
+      imagePath,
+      filePath,
+      quality: quality,
+    );
+
+    widget.controller.add(filePath);
+    if (widget.onComplete != null) {
+      widget.onComplete();
+    }
   }
 
   void _onChange() {
