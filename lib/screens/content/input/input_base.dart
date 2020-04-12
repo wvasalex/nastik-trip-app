@@ -39,10 +39,10 @@ abstract class InputBase extends StatefulWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.25),
+            color: theme.errorColor.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(0, 4),
+            offset: Offset(2, 4),
           ),
         ],
         borderRadius: BorderRadius.circular(5),

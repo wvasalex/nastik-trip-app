@@ -25,10 +25,11 @@ class _ContentListState extends State<ContentList> {
   Widget build(BuildContext context) {
     return Page(
       appBar: SAppBar(
-        label: 'Мгновенные заметки',
+        label: 'Заметки и списки',
       ),
       body: _body$(context),
       floatingActionButton: _fab$(context),
+      margin: EdgeInsets.all(0),
     );
   }
 
@@ -42,7 +43,7 @@ class _ContentListState extends State<ContentList> {
     if (_contents.length == 0) {
       return Empty(
         title: 'Без вариантов (',
-        description: 'Составьте план на выходные!',
+        description: 'Запишите идею, составьте список дел или покупок.\nВсе просто!',
         button: Hero(
           tag: 'submit',
           child: _submit$(context),
@@ -72,16 +73,19 @@ class _ContentListState extends State<ContentList> {
         article?.title?.length == 0 ? '#$index' : article.title;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 16,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.25),
+            color: theme.errorColor.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(0, 4),
+            offset: Offset(2, 4),
           ),
         ],
       ),

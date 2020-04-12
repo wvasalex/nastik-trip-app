@@ -104,10 +104,10 @@ class _ContentEditorState extends State<ContentEditor> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.25),
+            color: theme.errorColor.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(0, 4),
+            offset: Offset(2, 4),
           ),
         ],
       ),
@@ -115,6 +115,7 @@ class _ContentEditorState extends State<ContentEditor> {
         placeholder: 'Название',
         background: Colors.white,
         value: _content.title ?? '',
+        textCapitalization: TextCapitalization.sentences,
         onChange: (String title) {
           _content.title = title;
           _content.save();
