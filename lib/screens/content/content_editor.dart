@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:journey/shared/shared.dart';
 import 'input/input.dart';
@@ -19,6 +20,8 @@ class _ContentEditorState extends State<ContentEditor> {
   final InputSelectorController _selectorController = InputSelectorController();
 
   Content _content;
+
+  Map<int, FocusNode> _focusNodes = {};
 
   @override
   void initState() {
@@ -81,7 +84,7 @@ class _ContentEditorState extends State<ContentEditor> {
 
     return RoundButton(
       child: Icon(
-        Icons.delete,
+        Icons.delete_outline,
         color: theme.errorColor,
       ),
       onPressed: () {
@@ -98,15 +101,15 @@ class _ContentEditorState extends State<ContentEditor> {
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.05),
+            color: Colors.black.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(0, 4),
           ),
         ],
-        borderRadius: BorderRadius.circular(5),
       ),
       child: TextInput(
         placeholder: 'Название',
@@ -122,6 +125,7 @@ class _ContentEditorState extends State<ContentEditor> {
 
   List<Widget> _inputs$(BuildContext context) {
     int index = 0;
+    
     return _content.value.map((ContentValueItem contentItem) {
       return _input$(
         context,
@@ -133,8 +137,9 @@ class _ContentEditorState extends State<ContentEditor> {
 
   Widget _input$(
     BuildContext context, {
-    int index,
     ContentValueItem contentItem,
+    int index,
+    bool last,
   }) {
     Widget input$;
     final String path = _content.getPath();
@@ -150,8 +155,6 @@ class _ContentEditorState extends State<ContentEditor> {
         type: type,
         value: value,
         performTime: Helpers.localTime(),
-        lat: null,
-        lon: null,
       );
 
       if (index != -1) {
@@ -180,6 +183,10 @@ class _ContentEditorState extends State<ContentEditor> {
         break;
 
       default:
+        if (!_focusNodes.containsKey(index)) {
+          _focusNodes[index] = FocusNode();
+        }
+
         input$ = InputText(
           key: Key(key),
           onChange: (String value) {
@@ -190,6 +197,7 @@ class _ContentEditorState extends State<ContentEditor> {
           path: path,
           value: contentItem.value,
           date: contentItem.performTime,
+          focusNode: _focusNodes[index],
         );
     }
 
@@ -210,10 +218,12 @@ class _ContentEditorState extends State<ContentEditor> {
           type: inputType,
           value: value,
           performTime: Helpers.localTime(),
-          lat: null,
-          lon: null,
         ),
       );
+
+      Timer(Duration(milliseconds: 300), () {
+        _focusNodes[_content.value.length - 1]?.requestFocus();
+      });
     });
   }
 

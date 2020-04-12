@@ -18,7 +18,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
   AnimationController _animationController;
 
-  static const List<String> _texts = ['Начни', 'свой', 'трип!'];
+  static const List<String> _texts = ['Планы', 'Заметки', 'Покупки', 'Все просто!'];
   int _index = 0;
   String _label = _texts[0];
 

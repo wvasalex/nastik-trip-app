@@ -19,7 +19,9 @@ class RoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final ThemeData theme = Theme.of(context);
+
+    return Container(
       width: size,
       height: size,
       child: Center(
@@ -31,6 +33,7 @@ class RoundButton extends StatelessWidget {
             child: child,
           ),
           shape: CircleBorder(),
+          splashColor: theme.errorColor,
           elevation: elevation,
           fillColor: color,
         ),

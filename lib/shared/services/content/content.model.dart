@@ -111,31 +111,23 @@ class ContentValueItem {
   final String type;
   final String value;
   final int performTime;
-  final double lat;
-  final double lon;
 
   ContentValueItem({
     @required this.type,
     @required this.value,
     @required this.performTime,
-    @required this.lat,
-    @required this.lon,
   });
 
   ContentValueItem.fromJSON(Map<String, dynamic> raw)
       : type = raw['type'],
         value = raw['value'],
-        performTime = raw['perform_time'],
-        lat = raw['lat'],
-        lon = raw['lon'];
+        performTime = raw['perform_time'];
 
   Map toMap() {
     return {
       'type': type,
       'value': value,
       'perform_time': performTime,
-      'lat': lat,
-      'lon': lon,
     };
   }
 }

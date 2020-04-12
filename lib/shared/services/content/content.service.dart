@@ -50,17 +50,22 @@ class ContentService {
 
   Future<Content> createContent() async {
     final Content content = Content.empty();
-    await fs.createDirectory(content.getPath());
+    content.value.add(ContentValueItem(type: 'text',
+        value: '',
+        performTime: Helpers.localTime(),
+    ));
+    await
+    fs.createDirectory(content.getPath());
 
     return content;
   }
 
   Future<Content> getContent(int id) async {
-    return Content.empty(id: id)..read();
+    return Content.empty(id: id)
+      ..read();
   }
 
-  Future<bool> sendContent(
-    Content report, {
+  Future<bool> sendContent(Content report, {
     Function onCreated,
     Function onFileUpload,
     Function onCheckStart,
@@ -165,11 +170,10 @@ class ContentService {
     );
   }
 
-  Future _sendFiles(
-    int reportId,
-    Content report, {
-    Function onUpload,
-  }) async {
+  Future _sendFiles(int reportId,
+      Content report, {
+        Function onUpload,
+      }) async {
     final int uid = report.id;
 
     final String path = await fs.createDirectory('reports/$uid');

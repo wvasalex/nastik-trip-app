@@ -17,7 +17,7 @@ class Page extends StatefulWidget {
     this.scaffoldKey,
     this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
     this.appBar,
-    this.backgroundColor = const Color(0xFFE5E5E5),
+    this.backgroundColor,
     this.bottomNavigationBar,
     this.floatingActionButton,
   });
@@ -75,17 +75,7 @@ class _PageState extends State<Page> {
   Widget _body$(BuildContext context) {
     return Container(
       margin: widget.margin,
-      child: Stack(
-        children: <Widget>[
-          widget.body,
-          Positioned(
-            top: 0,
-            left: 16,
-            right: 0,
-            child: _connection$(context),
-          ),
-        ],
-      ),
+      child: widget.body,
     );
   }
 

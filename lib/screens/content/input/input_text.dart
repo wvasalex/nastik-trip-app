@@ -4,9 +4,11 @@ import 'input_base.dart';
 
 class InputText extends InputBase {
   final String value;
+  final FocusNode focusNode;
 
   InputText({
     this.value = '',
+    this.focusNode,
     @required Function(String) onChange,
     @required Function onCancel,
     @required Function onRemove,
@@ -43,9 +45,11 @@ class _InputTextState extends State<InputText> {
 
   Widget _input$(BuildContext context) {
     return TextInput(
-      placeholder: '__',
+      placeholder: '_',
       value: widget.value,
       onChange: widget.onChange,
+      focusNode: widget.focusNode,
+      textCapitalization: TextCapitalization.sentences,
       background: Colors.white,
       padding: EdgeInsets.all(0),
       minLines: 1,

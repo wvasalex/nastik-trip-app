@@ -25,7 +25,7 @@ class _ContentListState extends State<ContentList> {
   Widget build(BuildContext context) {
     return Page(
       appBar: SAppBar(
-        label: 'Мои идеи и планы',
+        label: 'Мгновенные заметки',
       ),
       body: _body$(context),
       floatingActionButton: _fab$(context),
@@ -75,15 +75,15 @@ class _ContentListState extends State<ContentList> {
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.05),
+            color: Colors.black.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(0, 4),
           ),
         ],
-        borderRadius: BorderRadius.circular(5),
       ),
       child: DataItem(
         onTap: (BuildContext _) {
@@ -113,24 +113,25 @@ class _ContentListState extends State<ContentList> {
     return FloatingActionButton(
       onPressed: _openEditor,
       heroTag: 'fab',
-      backgroundColor: theme.primaryColor,
+      backgroundColor: theme.errorColor,
       child: Icon(
         Icons.add,
         size: 36,
+        color: Colors.white,
       ),
     );
   }
 
   Future _load() async {
-    List articles;
+    List contents;
     try {
-      articles = await _contentService.getArticles();
+      contents = await _contentService.getArticles();
     } catch (e) {
-      articles = [];
+      contents = [];
     }
 
     setState(() {
-      _contents = articles;
+      _contents = contents;
     });
   }
 

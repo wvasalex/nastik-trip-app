@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journey/shared/widgets/stroke_text.widget.dart';
 
 class SAppBar extends AppBar {
   final String label;
@@ -20,7 +21,7 @@ class SAppBar extends AppBar {
     this.onTap,
     this.onBack,
     this.actions,
-    this.backColor = const Color(0XFF323132),
+    this.backColor = const Color(0xFFEA2434),
     this.borderWidth = 0,
     this.backgroundColor = Colors.transparent,
     this.elevation = 0,
@@ -55,13 +56,12 @@ class SAppBar extends AppBar {
 
   static Widget _title$(
       String label, Widget secondary, Function onTap, Color labelColor) {
-    final Widget title = Text(
+    final Widget title = StrokeText(
       label,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: labelColor ?? Color(0xFF323132),
-      ),
+      fontSize: 18,
+      color: labelColor ?? Color(0xFF323132),
+      strokeColor: Colors.white,
+      strokeWidth: .3,
     );
 
     if (secondary == null) {

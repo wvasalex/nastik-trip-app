@@ -24,7 +24,7 @@ class _PullToDismissState extends State<PullToDismiss> {
     final Size size = MediaQuery.of(context).size;
 
     return Page(
-      backgroundColor: Colors.white.withOpacity(1 - _opacity),
+      //backgroundColor: Colors.white.withOpacity(1 - _opacity),
       body: AnimatedOpacity(
         opacity: _opacity,
         duration: Duration(milliseconds: 120),

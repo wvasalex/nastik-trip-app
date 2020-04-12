@@ -20,6 +20,8 @@ class TextInput extends StatefulWidget {
   final bool readOnly;
   final int minLines;
   final int maxLines;
+  final FocusNode focusNode;
+  final TextCapitalization textCapitalization;
 
   TextInput({
     this.onSubmitted,
@@ -52,6 +54,8 @@ class TextInput extends StatefulWidget {
     ),
     this.minLines = 1,
     this.maxLines = 2,
+    this.focusNode,
+    this.textCapitalization,
   });
 
   TextInput.large({
@@ -70,6 +74,8 @@ class TextInput extends StatefulWidget {
     this.replacerType,
     this.minLines = 1,
     this.maxLines = 2,
+    this.focusNode,
+    this.textCapitalization,
   })  : background = Colors.transparent,
         style = TextStyle(
           color: Color(0xFF323132),
@@ -123,6 +129,8 @@ class _TextInputState extends State<TextInput> {
         ),
         child: TextFormField(
           controller: _controller,
+          focusNode: widget.focusNode,
+          textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
           onFieldSubmitted: widget.onSubmitted,
           keyboardType: widget.keyboardType,
           validator: widget.validator,
