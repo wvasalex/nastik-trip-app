@@ -93,8 +93,8 @@ class Content {
     }
   }
 
-  void delete() {
-    fs.deleteDirectory(getPath());
+  Future delete() {
+    return fs.deleteDirectory(getPath());
   }
 
   String toString() {

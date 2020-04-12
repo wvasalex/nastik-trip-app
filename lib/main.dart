@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color textColor = Color(0xFF323132);
-    final Color errorColor = Colors.deepOrange;
+    final Color errorColor = Colors.red;
 
     return MaterialApp(
       title: 'Мгновенные заметки',
@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
         fontFamily: 'OpenSans',
-        primaryColor: Color(0xFFfdf7ec),
+        primaryColor: errorColor,
         errorColor: errorColor,
         secondaryHeaderColor: Color(0xFFF5F5DC),
-        scaffoldBackgroundColor: Color(0xFFfdf7ec),
+        scaffoldBackgroundColor: Color(0xFFd5b59c),
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),

@@ -78,7 +78,7 @@ class _ContentListState extends State<ContentList> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: theme.errorColor.withOpacity(.25),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(0, 4),

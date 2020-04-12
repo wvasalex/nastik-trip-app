@@ -21,7 +21,7 @@ class SAppBar extends AppBar {
     this.onTap,
     this.onBack,
     this.actions,
-    this.backColor = const Color(0xFFEA2434),
+    this.backColor = Colors.red,
     this.borderWidth = 0,
     this.backgroundColor = Colors.transparent,
     this.elevation = 0,
@@ -60,7 +60,7 @@ class SAppBar extends AppBar {
       label,
       fontSize: 18,
       color: labelColor ?? Color(0xFF323132),
-      strokeColor: Colors.white,
+      strokeColor: Color(0xFFd5b59c),
       strokeWidth: .3,
     );
 

@@ -87,8 +87,8 @@ class _ContentEditorState extends State<ContentEditor> {
         Icons.delete_outline,
         color: theme.errorColor,
       ),
-      onPressed: () {
-        _content.delete();
+      onPressed: () async {
+        await _content.delete();
         Navigator.of(context).pop();
       },
     );
@@ -104,7 +104,7 @@ class _ContentEditorState extends State<ContentEditor> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: theme.errorColor.withOpacity(.25),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(0, 4),
