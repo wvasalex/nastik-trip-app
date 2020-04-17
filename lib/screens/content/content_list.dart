@@ -82,7 +82,7 @@ class _ContentListState extends State<ContentList> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.05),
+            color: theme.primaryColor.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(2, 4),
@@ -117,7 +117,7 @@ class _ContentListState extends State<ContentList> {
     return FloatingActionButton(
       onPressed: _openEditor,
       heroTag: 'fab',
-      backgroundColor: theme.errorColor,
+      backgroundColor: theme.primaryColor,
       child: Icon(
         Icons.add,
         size: 36,

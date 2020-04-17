@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color textColor = Color(0xFF323132);
     final Color errorColor = Colors.deepOrange;
-    final Color primaryColor = Colors.deepOrange;
+    final Color primaryColor = Colors.blue;
 
     return MaterialApp(
       title: 'Мгновенные заметки',

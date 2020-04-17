@@ -45,6 +45,9 @@ class _ContentEditorState extends State<ContentEditor> {
       ),
       body: _body$(context),
       floatingActionButton: _fab$(context),
+      bottomNavigationBar: BottomAppBar(
+        child: Text('bottom'),
+      ),
       margin: EdgeInsets.all(0),
     );
   }
