@@ -21,7 +21,7 @@ class SAppBar extends AppBar {
     this.onTap,
     this.onBack,
     this.actions,
-    this.backColor = Colors.red,
+    this.backColor = Colors.black,
     this.borderWidth = 0,
     this.backgroundColor = Colors.transparent,
     this.elevation = 0,

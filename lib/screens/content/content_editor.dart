@@ -44,11 +44,13 @@ class _ContentEditorState extends State<ContentEditor> {
         ],
       ),
       body: _body$(context),
-      floatingActionButton: _fab$(context),
       bottomNavigationBar: BottomAppBar(
-        child: Text('bottom'),
+        child: _bottom$(context),
+        shape: CircularNotchedRectangle(),
       ),
       margin: EdgeInsets.all(0),
+      floatingActionButton: _fab$(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -59,26 +61,44 @@ class _ContentEditorState extends State<ContentEditor> {
       );
     }
 
-    return Stack(
-      children: <Widget>[
-        SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [_header$(context)]
-              ..addAll(_inputs$(context))
-              ..add(SizedBox(height: 64)),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [_header$(context)]
+          ..addAll(_inputs$(context))
+          ..add(SizedBox(height: 64)),
+      ),
+    );
+  }
+
+  Widget _bottom$(BuildContext context) {
+    return Container(
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          _camera$(context),
+          SizedBox(width: 32),
+          InkWell(
+            onTap: () {},
+            child: Icon(Icons.mic),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _fab$(BuildContext context) {
-    return InputSelector(
-      controller: _selectorController,
-      onSelect: (String inputType) {
-        _addItem(inputType);
-      },
+    final ThemeData theme = Theme.of(context);
+
+    return FloatingActionButton(
+      heroTag: 'fab',
+      onPressed: () {},
+      child: Icon(
+        Icons.edit,
+        color: Colors.white,
+      ),
+      backgroundColor: theme.primaryColor,
     );
   }
 
@@ -88,7 +108,7 @@ class _ContentEditorState extends State<ContentEditor> {
     return RoundButton(
       child: Icon(
         Icons.delete_outline,
-        color: theme.errorColor,
+        color: Colors.black,
       ),
       onPressed: () async {
         await _content.delete();
@@ -107,7 +127,7 @@ class _ContentEditorState extends State<ContentEditor> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.05),
+            color: Colors.black.withOpacity(.03),
             blurRadius: 4.0,
             spreadRadius: 2.0,
             offset: Offset(2, 4),
@@ -127,9 +147,20 @@ class _ContentEditorState extends State<ContentEditor> {
     );
   }
 
+  Widget _camera$(BuildContext context) {
+    return InkWell(
+      customBorder: CircleBorder(),
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Icon(Icons.camera_alt),
+      )
+    );
+  }
+
   List<Widget> _inputs$(BuildContext context) {
     int index = 0;
-    
+
     return _content.value.map((ContentValueItem contentItem) {
       return _input$(
         context,

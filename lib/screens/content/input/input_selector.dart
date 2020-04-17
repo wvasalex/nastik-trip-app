@@ -73,7 +73,7 @@ class _InputSelectorState extends State<InputSelector>
 
     items.add(
       FloatingActionButton(
-        backgroundColor: theme.errorColor,
+        backgroundColor: theme.primaryColor,
         heroTag: 'fab',
         child: AnimatedBuilder(
           animation: _animationController,

@@ -10,6 +10,7 @@ class Page extends StatefulWidget {
   final Color backgroundColor;
   final Widget bottomNavigationBar;
   final Widget floatingActionButton;
+  final FloatingActionButtonLocation floatingActionButtonLocation;
   final Connection connection = Connection();
 
   Page({
@@ -20,6 +21,7 @@ class Page extends StatefulWidget {
     this.backgroundColor,
     this.bottomNavigationBar,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
   });
 
   @override
@@ -68,6 +70,7 @@ class _PageState extends State<Page> {
       ),
       bottomNavigationBar: widget.bottomNavigationBar,
       floatingActionButton: widget.floatingActionButton,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
       resizeToAvoidBottomInset: true,
     );
   }

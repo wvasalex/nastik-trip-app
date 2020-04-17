@@ -43,7 +43,8 @@ class _ContentListState extends State<ContentList> {
     if (_contents.length == 0) {
       return Empty(
         title: 'Без вариантов (',
-        description: 'Запишите идею, составьте список дел или покупок.\nВсе просто!',
+        description:
+            'Запишите идею, составьте список дел или покупок.\nВсе просто!',
         button: Hero(
           tag: 'submit',
           child: _submit$(context),
@@ -82,10 +83,10 @@ class _ContentListState extends State<ContentList> {
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: theme.primaryColor.withOpacity(.05),
+            color: Colors.black.withOpacity(.03),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(2, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
