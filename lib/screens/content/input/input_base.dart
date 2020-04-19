@@ -39,10 +39,10 @@ abstract class InputBase extends StatefulWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: theme.errorColor.withOpacity(.05),
+            color: Colors.black.withOpacity(.05),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(2, 4),
+            offset: Offset(0, 4),
           ),
         ],
         borderRadius: BorderRadius.circular(5),
@@ -60,26 +60,6 @@ abstract class InputBase extends StatefulWidget {
           _remove$(context),
         ],
       ),
-      /*child: Column(
-        children: <Widget>[
-          child,
-          SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                Helpers.date(
-                  date: date ?? 0,
-                  format: 'H:mm',
-                  ms: 1,
-                ),
-                style: theme.textTheme.body2,
-              ),
-              _remove$(context),
-            ],
-          ),
-        ],
-      ),*/
     );
   }
 

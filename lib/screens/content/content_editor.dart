@@ -40,7 +40,6 @@ class _ContentEditorState extends State<ContentEditor> {
         },
         actions: <Widget>[
           _delete$(context),
-          SizedBox(width: 16),
         ],
       ),
       body: _body$(context),
@@ -79,10 +78,7 @@ class _ContentEditorState extends State<ContentEditor> {
         children: <Widget>[
           _camera$(context),
           SizedBox(width: 32),
-          InkWell(
-            onTap: () {},
-            child: Icon(Icons.mic),
-          ),
+          _audio$(context),
         ],
       ),
     );
@@ -93,7 +89,9 @@ class _ContentEditorState extends State<ContentEditor> {
 
     return FloatingActionButton(
       heroTag: 'fab',
-      onPressed: () {},
+      onPressed: () {
+        _addItem('text');
+      },
       child: Icon(
         Icons.edit,
         color: Colors.white,
@@ -105,15 +103,15 @@ class _ContentEditorState extends State<ContentEditor> {
   Widget _delete$(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return RoundButton(
+    return _control$(
+      onTap: () async {
+        await _content.delete();
+        Navigator.of(context).pop();
+      },
       child: Icon(
         Icons.delete_outline,
         color: Colors.black,
       ),
-      onPressed: () async {
-        await _content.delete();
-        Navigator.of(context).pop();
-      },
     );
   }
 
@@ -130,7 +128,7 @@ class _ContentEditorState extends State<ContentEditor> {
             color: Colors.black.withOpacity(.03),
             blurRadius: 4.0,
             spreadRadius: 2.0,
-            offset: Offset(2, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -147,14 +145,35 @@ class _ContentEditorState extends State<ContentEditor> {
     );
   }
 
-  Widget _camera$(BuildContext context) {
+  Widget _control$({
+    Function onTap,
+    Widget child,
+  }) {
     return InkWell(
       customBorder: CircleBorder(),
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16),
-        child: Icon(Icons.camera_alt),
-      )
+        child: child,
+      ),
+    );
+  }
+
+  Widget _camera$(BuildContext context) {
+    return _control$(
+      onTap: () {
+        SingleImagePicker.pick(context);
+      },
+      child: Icon(Icons.camera_alt),
+    );
+  }
+
+  Widget _audio$(BuildContext context) {
+    return _control$(
+      onTap: () {
+
+      },
+      child: Icon(Icons.mic),
     );
   }
 
